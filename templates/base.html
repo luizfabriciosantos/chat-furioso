@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Furioso</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #2c2c2c;
+            color: #d4af37;
+            font-family: Arial, sans-serif;
+            background-image: url("{{ url_for('static', filename='WALLPAPER #8 - WIDE.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh; /* Garante que o body preencha a altura total da tela */
+            width: 100vw; /* Garante que o body preencha a largura total da tela */
+            overflow: hidden;
+            opacity: 1; /* Remove barras de rolagem */
+        }
+    
+        .chat-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centraliza horizontalmente */
+            justify-content: center; /* Centraliza verticalmente */
+            height: 100%; /* Ocupa toda a altura disponível */
+        }
+    
+        .chat-box {
+            width: 80%; /* Ajuste conforme necessário */
+            max-width: 600px;
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #d4af37;
+            padding: 10px;
+            background-color: #3a3a3a;
+            border-radius: 5px;
+            color: #d4af37;
+        }
+    .name-input-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .name-input-section input {
+        width: 80%;
+        max-width: 400px;
+        padding: 10px;
+        border: 2px solid #d4af37;
+        border-radius: 10px;
+        background-color: #3a3a3a;
+        color: #d4af37;
+        font-size: 16px;
+    }
+
+    .name-input-section button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        background-color: #d4af37;
+        color: #2c2c2c;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .name-input-section button:hover {
+        background-color: #f0e68c;
+    }
+        .chat-input {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+    
+        .chat-input input {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #d4af37;
+            border-radius: 3px;
+            background-color: #3a3a3a;
+            color: #d4af37;
+        }
+    
+        .chat-input button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            background-color: #d4af37;
+            color: #2c2c2c;
+            cursor: pointer;
+        }
+    
+        .chat-input button:hover {
+            background-color: #f0e68c;
+        }
+        nav a {
+        color: #d4af37; /* Cor dourada */
+        text-decoration: none; /* Remove o sublinhado */
+        margin: 0 15px;
+        font-size: 18px; /* Ajuste o tamanho da fonte */
+    }
+
+    nav a:hover {
+        color: #f0e68c; /* Cor dourada mais clara ao passar o mouse */
+    }
+    header {
+        text-align: center; /* Centraliza o conteúdo do cabeçalho */
+        margin: 20px 0; /* Adiciona espaçamento ao redor */
+    }
+
+    header h1 {
+        font-size: 36px; /* Ajuste o tamanho da fonte */
+        color: #d4af37; /* Cor dourada */
+        margin: 0; /* Remove margens extras */
+    }
+    </style>
+</head>
+<body>
+    <img src="../static/WALLPAPER #8 - WIDE.png" alt="">
+    <header>
+        <h1>Bem-vindo ao Chat Furioso!</h1>
+    </header>
+    <nav style="text-align: center; margin: 20px 0;">
+        <a href="/" style="margin: 0 15px;">Home</a>
+        <a href="/chat/cs" style="margin: 0 15px;">CS</a>
+        <a href="/chat/valorant" style="margin: 0 15px;">Valorant</a>
+        <a href="/chat/lol" style="margin: 0 15px;">LoL</a>
+        <a href="/chat/futebol" style="margin: 0 15px;">Futebol</a>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+<footer>
+    <p style="position: fixed; bottom: 0; width: 100%; text-align: center; background-color: #2c2c2c; margin: 0; padding: 10px;">&copy; 2025 Chat Furioso. Todos os direitos reservados.</p>
+</footer>
+</html>

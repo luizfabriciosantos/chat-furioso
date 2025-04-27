@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="chat-section">
+    <h2>Chat: {{ chat_id }}</h2>
+    <!-- Seção para configurar o nome de usuário -->
+    <div id="username-section">
+        <input type="text" id="username-input" placeholder="Digite seu nome de usuário...">
+        <button onclick="setUsername()">Entrar</button>
+    </div>
+
+    <!-- Container do chat (inicialmente oculto) -->
+    <div id="chat-container" style="display: none;">
+        <div class="chat-box" id="chat-box"></div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Digite sua mensagem...">
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+    const socket = io();
+    const chatId = "{{ chat_id }}";
+    let username = null;
+
+    // Configurar o nome de usuário
+    function setUsername() {
+        const input = document.getElementById('username-input');
+        const enteredUsername = input.value.trim();
+
+        if (enteredUsername) {
+            username = enteredUsername;
+            document.getElementById('username-section').style.display = 'none';
+            document.getElementById('chat-container').style.display = 'block';
+
+            // Entrar na sala
+            socket.emit('join', { chat_id: chatId, username: username });
+        } else {
+            alert('Por favor, insira um nome de usuário válido.');
+        }
+    }
+
+    // Carregar mensagens antigas
+    fetch(`/messages/${chatId}`)
+        .then(response => response.json())
+        .then(messages => {
+            const chatBox = document.getElementById('chat-box');
+            messages.forEach(msg => {
+                const messageElement = document.createElement('p');
+                messageElement.textContent = `${msg.username}: ${msg.message}`;
+                chatBox.appendChild(messageElement);
+            });
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+    // Receber mensagens
+    socket.on('receive_message', (data) => {
+        if (data.chat_id === chatId) {
+            const chatBox = document.getElementById('chat-box');
+            const messageElement = document.createElement('p');
+            messageElement.textContent = `${data.username}: ${data.message}`;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    });
+
+    // Notificar quando um usuário entra
+    socket.on('user_joined', (data) => {
+        const chatBox = document.getElementById('chat-box');
+        const messageElement = document.createElement('p');
+        messageElement.style.color = 'green';
+        messageElement.textContent = `${data.username} entrou no chat.`;
+        chatBox.appendChild(messageElement);
+    });
+
+    // Notificar quando um usuário sai
+    socket.on('user_left', (data) => {
+        const chatBox = document.getElementById('chat-box');
+        const messageElement = document.createElement('p');
+        messageElement.style.color = 'red';
+        messageElement.textContent = `${data.username} saiu do chat.`;
+        chatBox.appendChild(messageElement);
+    });
+
+    // Enviar mensagem
+    function sendMessage() {
+        const input = document.getElementById('message-input');
+        const message = input.value.trim();
+
+        if (message && username) {
+            socket.emit('send_message', { chat_id: chatId, username: username, message: message });
+            input.value = '';
+        } else if (!username) {
+            alert('Por favor, insira seu nome de usuário antes de enviar mensagens.');
+        }
+    }
+
+    // Sair da sala ao fechar a aba
+    window.addEventListener('beforeunload', () => {
+        if (username) {
+            socket.emit('leave', { chat_id: chatId, username: username });
+        }
+    });
+</script>
+{% endblock %}
